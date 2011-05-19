@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<project name="JZBoy-Tests" basedir=".">
+    <!-- Contains ant tasks that run individual tests. Useful when you don't want to run the entire suite. -->
+    <import file="build.xml"/>
+
+    <target name="test.JsonUtils" depends="build.tests">
+        <junit fork="yes" haltonfailure="yes">
+            <classpath refid="classpath.test" />
+            <classpath>
+                <pathelement location="${build.dir}/tests" />
+            </classpath>
+            <test name="com.jzboy.couchdb.util.JsonUtilsTest" />
+            <formatter type="plain" usefile="false" />
+        </junit>
+    </target>
+
+    <target name="test.DatabaseAPITest" depends="build.tests">
+        <junit fork="yes" haltonfailure="yes">
+            <classpath refid="classpath.test" />
+            <classpath>
+                <pathelement location="${build.dir}/tests" />
+            </classpath>
+            <test name="com.jzboy.couchdb.DatabaseAPITest" />
+            <formatter type="plain" usefile="false" />
+        </junit>
+    </target>
+
+    <target name="test.DatabaseDocReadTest" depends="build.tests">
+        <junit fork="yes" haltonfailure="yes">
+            <classpath refid="classpath.test" />
+            <classpath>
+                <pathelement location="${build.dir}/tests" />
+            </classpath>
+            <test name="com.jzboy.couchdb.DatabaseDocReadTest" />
+            <formatter type="plain" usefile="false" />
+        </junit>
+    </target>
+
+    <target name="test.DatabaseDocUpdateTest" depends="build.tests">
+        <junit fork="yes" haltonfailure="yes">
+            <classpath refid="classpath.test" />
+            <classpath>
+                <pathelement location="${build.dir}/tests" />
+            </classpath>
+            <test name="com.jzboy.couchdb.DatabaseDocUpdateTest" />
+            <formatter type="plain" usefile="false" />
+        </junit>
+    </target>
+
+    <target name="test.ServerTest" depends="build.tests">
+        <junit fork="yes" haltonfailure="yes">
+            <classpath refid="classpath.test" />
+            <classpath>
+                <pathelement location="${build.dir}/tests" />
+            </classpath>
+            <test name="com.jzboy.couchdb.ServerTest" />
+            <formatter type="plain" usefile="false" />
+        </junit>
+    </target>
+
+</project>
