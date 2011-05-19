@@ -10,7 +10,7 @@ tmp/*
 .classpath
 nbproject/*
 .idea/*
-jzboy.iml
+*.iml
 
 # JavaDocs
 doc/*

@@ -1,10 +1,14 @@
+/*
+ * Copyright (c) 2011. Elad Kehat.
+ * This software is provided under the MIT License:
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
 package com.jzboy.couchdb;
 
 /**
  * A checked exception for the CouchDB code.
  * Optionally stores the http status code received in the response form couch.
- *
- * @author Elad Kehat
  */
 public class CouchDBException extends Exception {
 	static final long serialVersionUID = -1796055831637850765L;

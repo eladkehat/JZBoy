@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2011. Elad Kehat.
+ * This software is provided under the MIT License:
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
 package com.jzboy.couchdb.http;
 
 import com.jzboy.couchdb.CouchDBException;
@@ -20,8 +26,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This class provides methods that generate HTTP-REST requests to CouchDB APIs.
- * 
- * @author Elad Kehat
  */
 public class CouchHttpClient {
 
@@ -30,7 +34,7 @@ public class CouchHttpClient {
 	final HttpClient httpclient = new DefaultHttpClient();
 
 	/**
-	 * Sends a GET request to the speficifed CouchDB endpoint and returns CouchDB's response as a JSON object.
+	 * Sends a GET request to the specified CouchDB endpoint and returns CouchDB's response as a JSON object.
 	 * Use this method on APIs that return a JSON String, where you want that JSON parsed for you.
 	 * @param uri	CouchDB API endpoint
 	 * @return the JSON tree parsed form the response body

@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2011. Elad Kehat.
+ * This software is provided under the MIT License:
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
 package com.jzboy.couchdb;
 
 import com.jzboy.couchdb.http.CouchResponse;
@@ -27,8 +33,6 @@ import org.slf4j.LoggerFactory;
  * A wrapper around CouchDB database level API
  *
  * @see <a href="http://wiki.apache.org/couchdb/API_Cheatsheet">CouchDB API Wiki</a>
- *
- * @author Elad Kehat
  */
 public class Database {
 

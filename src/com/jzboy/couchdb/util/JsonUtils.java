@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2011. Elad Kehat.
+ * This software is provided under the MIT License:
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
 package com.jzboy.couchdb.util;
 
 import java.io.ByteArrayOutputStream;
@@ -12,8 +18,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 /**
  * JSON and Jackson-related utility methods
- * 
- * @author Elad Kehat
  */
 public class JsonUtils {
 

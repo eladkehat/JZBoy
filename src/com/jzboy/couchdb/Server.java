@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2011. Elad Kehat.
+ * This software is provided under the MIT License:
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
 package com.jzboy.couchdb;
 
 import com.jzboy.couchdb.http.*;
@@ -10,8 +16,6 @@ import org.codehaus.jackson.JsonNode;
  * A wrapper around CouchDB server level API
  *
  * @see <a href="http://wiki.apache.org/couchdb/API_Cheatsheet#CouchDB_Server_Level">CouchDB Wiki</a>
- *
- * @author Elad Kehat
  */
 public class Server {
 

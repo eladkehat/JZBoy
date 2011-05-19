@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+  ~ Copyright (c) 2011. Elad Kehat.
+  ~ This software is provided under the MIT License:
+  ~ http://www.opensource.org/licenses/mit-license.php
+  -->
+
 <project name="JZBoy-Tests" basedir=".">
     <!-- Contains ant tasks that run individual tests. Useful when you don't want to run the entire suite. -->
     <import file="build.xml"/>

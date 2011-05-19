@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2011. Elad Kehat.
+ * This software is provided under the MIT License:
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
 package com.jzboy.couchdb;
 
 import java.util.Map;
@@ -9,8 +15,6 @@ import static org.junit.Assert.*;
 /**
  * Tests for the Database class methods that run on the database itself - not on documents within it.
  * These tests run against a CouchDB instance running on localhost and listening on the default port (5984).
- * 
- * @author Elad Kehat
  */
 public class DatabaseAPITest {
 

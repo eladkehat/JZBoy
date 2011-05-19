@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2011. Elad Kehat.
+ * This software is provided under the MIT License:
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
 package com.jzboy.couchdb;
 
 import com.jzboy.couchdb.util.JsonUtils;
@@ -14,8 +20,6 @@ import org.codehaus.jackson.JsonNode;
  * <li>key	- if this document was retrieved from a view, its key in the view</li>
  * <li>json	- any other document or content, as a JSON object</li>
  * </ul>
- *
- * @author Elad Kehat
  */
 public class Document {
 

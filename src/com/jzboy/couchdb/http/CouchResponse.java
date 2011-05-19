@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2011. Elad Kehat.
+ * This software is provided under the MIT License:
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
 package com.jzboy.couchdb.http;
 
 import com.jzboy.couchdb.util.JsonUtils;
@@ -7,8 +13,6 @@ import org.codehaus.jackson.JsonNode;
 /**
  * Encapsulates a response from CouchDB api, including the HTTP response code, the actual response text (if any), and
  * the JsonNode parsed from that text
- *
- * @author Elad Kehat
  */
 public class CouchResponse {
 

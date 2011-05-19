@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2011. Elad Kehat.
+ * This software is provided under the MIT License:
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
 package com.jzboy.couchdb.http;
 
 import java.io.IOException;
@@ -14,8 +20,6 @@ import org.apache.http.util.EntityUtils;
 /**
  * A {@link org.apache.http.client.ResponseHandler ResponseHandler} that returns a CouchResponse based on
  * CouchDB API HTTP response.
- * 
- * @author Elad Kehat
  */
 @Immutable
 public class CouchResponseHandler implements ResponseHandler<CouchResponse> {

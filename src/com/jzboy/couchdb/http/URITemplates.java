@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2011. Elad Kehat.
+ * This software is provided under the MIT License:
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
 package com.jzboy.couchdb.http;
 
 import com.jzboy.couchdb.Database;
@@ -11,8 +17,6 @@ import org.apache.http.client.utils.URIUtils;
  * Utility methods that creates the URIs for access to CouchDB API.
  *
  * @see <a href="http://wiki.apache.org/couchdb/URI_templates">CouchDB Wiki</a>
- * 
- * @author Elad Kehat
  */
 public class URITemplates {
 

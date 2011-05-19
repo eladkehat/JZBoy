@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2011. Elad Kehat.
+ * This software is provided under the MIT License:
+ * http://www.opensource.org/licenses/mit-license.php
+ */
+
 package com.jzboy.couchdb.util;
 import java.io.IOException;
 import org.codehaus.jackson.node.ArrayNode;
@@ -6,10 +12,6 @@ import org.codehaus.jackson.node.ObjectNode;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author Elad Kehat
- */
 public class JsonUtilsTest {
 
 	@Test
