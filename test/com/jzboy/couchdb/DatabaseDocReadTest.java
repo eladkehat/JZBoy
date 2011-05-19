@@ -62,7 +62,8 @@ public class DatabaseDocReadTest {
 		String str = docs.get(id);
 		JsonNode exp = JsonUtils.createParser(str).readValueAsTree();
 		Document doc = instance.getDocument(id);
-		assertEquals(exp, doc.getJson());
+		assertEquals("JSON contents of a doc returned by getDocument didn't match the original contents",
+                exp, doc.getJson());
 	}
 
 	@Test
@@ -71,11 +72,13 @@ public class DatabaseDocReadTest {
 		String str = docs.get(existingId);
 		JsonNode exp = JsonUtils.createParser(str).readValueAsTree();
 		Document doc = instance.getDocumentOrNull(existingId);
-		assertEquals(exp, doc.getJson());
+		assertEquals("JSON contents of a doc returned by getDocumentOrNull didn't match the original contents",
+                exp, doc.getJson());
 
 		final String missingId = "no-such-id";
 		doc = instance.getDocumentOrNull(missingId);
-		assertNull(doc);
+		assertNull("Non-existent doc returned by getDocumentOrNull wasn't null",
+                doc);
 
 		// ensure we still get an exception on errors other than 404
 		Database wrong = new Database("NO-SUCH-DATABASE"); // only lowercase letters are allowed by couchdb
@@ -83,7 +86,8 @@ public class DatabaseDocReadTest {
 			wrong.getDocumentOrNull(missingId);
 			fail("Expected an exception when calling getDocumentOrNull() on a db with an illegal name");
 		} catch (CouchDBException ex) {
-			assertTrue(ex.getStatusCode() != 404);
+			assertTrue("Attempt to a document from a non-existent database didn't return the expected status code",
+                    ex.getStatusCode() != 404);
 		}
 	}
 
@@ -95,9 +99,11 @@ public class DatabaseDocReadTest {
 		}};
 		ArrayList<JsonNode> changes = instance.changes(params);
 		int expSize = docs.size() - since;
-		assertTrue(changes.size() >= expSize);
+		assertTrue("Size of changes list smaller than expected",
+                changes.size() >= expSize);
 		JsonNode change = changes.get(0);
-		assertEquals(3, JsonUtils.getInt(change, "seq", 0));
+		assertEquals("Change sequence number not as expected",
+                3, JsonUtils.getInt(change, "seq", 0));
 	}
 
 	@Test
@@ -107,7 +113,8 @@ public class DatabaseDocReadTest {
 		for (Document doc : res) {
 			String str = docs.get(doc.getId());
 			JsonNode exp = JsonUtils.createParser(str).readValueAsTree();
-			assertEquals(exp, doc.getJson());
+			assertEquals("JSON contents of a doc returned by getDocuments with includeDocs ON didn't match the original contents",
+                    exp, doc.getJson());
 		}
 	}
 
@@ -116,8 +123,10 @@ public class DatabaseDocReadTest {
 		ArrayList<Document> res = instance.getDocuments(docs.keySet(), false);
 		assertEquals(docs.size(), res.size());
 		for (Document doc : res) {
-			assertNotNull(docs.get(doc.getId()));
-			assertEquals("{}", doc.getJson().toString());
+			assertNotNull("Document returned by getDocuments had no ID",
+                    docs.get(doc.getId()));
+			assertEquals("JSON contents of a doc returned by getDocuments with includeDocs OFF wasn't empty",
+                    "{}", doc.getJson().toString());
 		}
 	}
 
@@ -129,7 +138,8 @@ public class DatabaseDocReadTest {
 		}};
 		ArrayList<Document> res = instance.getDocuments(docs.keySet(), params);
 		int expSize = docs.size() - skip;
-		assertEquals(expSize, res.size());
+		assertEquals("getDocuments with 'skip' param didn't return the expected number of docs",
+                expSize, res.size());
 	}
 	
 	@Test
@@ -139,7 +149,8 @@ public class DatabaseDocReadTest {
 		for (Document doc : res) {
 			String str = docs.get(doc.getId());
 			JsonNode exp = JsonUtils.createParser(str).readValueAsTree();
-			assertEquals(exp, doc.getJson());
+			assertEquals("JSON contents of a doc returned by getAllDocuments didn't match the original",
+                    exp, doc.getJson());
 		}
 	}
 
@@ -148,8 +159,10 @@ public class DatabaseDocReadTest {
 		ArrayList<Document> res = instance.getAllDocuments(false);
 		assertEquals(docs.size(), res.size());
 		for (Document doc : res) {
-			assertNotNull(docs.get(doc.getId()));
-			assertEquals("{}", doc.getJson().toString());
+			assertNotNull("ID of doc retrieved by getAllDocuments was null",
+                    docs.get(doc.getId()));
+			assertEquals("JSON contents of a doc returned by getAllDocuments with includeDocs OFF wasn't empty",
+                    "{}", doc.getJson().toString());
 		}
 	}
 
@@ -162,17 +175,20 @@ public class DatabaseDocReadTest {
 			add(new BasicNameValuePair("include_docs", "true"));
 		}};
 		ArrayList<Document> res = instance.getAllDocuments(params);
-		assertEquals(1, res.size());
+		assertEquals("Size of docs list returned by getAllDocumentsWithParams didn't match the expected",
+                1, res.size());
 		String str = docs.get(key);
 		JsonNode exp = JsonUtils.createParser(str).readValueAsTree();
-		assertEquals(exp, res.get(0).getJson());
+		assertEquals("JSON contents of a doc returned by getAllDocumentsWithParams didn't match the original",
+                exp, res.get(0).getJson());
 	}
 
 	@Test
 	public void testDesignDocumentInfo() throws Exception {
 		JsonNode result = instance.designDocumentInfo(designDocName);
 		String resName = result.get("name").getTextValue();
-		assertEquals(designDocName, resName);
+		assertEquals("Name of the design document returned by designDocumentInfo didn't match the name of the actual design document",
+                designDocName, resName);
 	}
 
 	@Test
@@ -187,13 +203,16 @@ public class DatabaseDocReadTest {
 				expDocIds.add(entry.getKey());
 			}
 		}
-		assertEquals(expDocIds.size(), results.size());
+		assertEquals("queryView didn't return the expected number of docs",
+                expDocIds.size(), results.size());
 		for (Document doc : results) {
-			assertTrue(expDocIds.contains(doc.getId()));
-			assertTrue(doc.hasKey());
+			assertTrue("queryView didn't return a document that should have been",
+                    expDocIds.contains(doc.getId()));
+			assertTrue("Doc returned by queryView has no key", doc.hasKey());
 			String str = docs.get(doc.getId());
 			JsonNode exp = JsonUtils.createParser(str).readValueAsTree();
-			assertEquals(exp, doc.getJson());
+			assertEquals("JSON contents of doc returned by queryView didn't match the original",
+                    exp, doc.getJson());
 		}
 	}
 
@@ -209,7 +228,8 @@ public class DatabaseDocReadTest {
 				expCount++;
 			}
 		}
-		assertEquals(expCount, result.get("total_rows").getIntValue());
+		assertEquals("queryViewRaw didn't return the expected total rows",
+                expCount, result.get("total_rows").getIntValue());
 	}
 
 	@Test
@@ -226,12 +246,15 @@ public class DatabaseDocReadTest {
 		}
 		List<String> keys = allViewDocIds.subList(0, 1);
 		ArrayList<Document> results = instance.getFromView(designDocName, viewName, keys, params);
-		assertEquals(keys.size(), results.size());
+		assertEquals("getFromView did not return all the requested docs",
+                keys.size(), results.size());
 		for (Document doc : results) {
-			assertTrue(keys.contains(doc.getId()));
+			assertTrue("getFromView returned a doc that wasn't requested",
+                    keys.contains(doc.getId()));
 			String str = docs.get(doc.getId());
 			JsonNode exp = JsonUtils.createParser(str).readValueAsTree();
-			assertEquals(exp, doc.getJson());
+			assertEquals("JSON contents of doc returned by getFromView didn't match the original",
+                    exp, doc.getJson());
 		}
 	}
 
@@ -239,10 +262,13 @@ public class DatabaseDocReadTest {
 	public void testTempViewString() throws Exception {
 		String jsonStr = "{\"map\":\"function(doc) { if (doc.field1=='value1') { emit(null, doc.field1); } }\"}";
 		ArrayList<Document> results = instance.tempView(jsonStr);
-		assertEquals(1, results.size());
+		assertEquals("tempView using a serialized JSON didn't return the expected number of results",
+                1, results.size());
 		Document doc = results.get(0);
-		assertEquals("1", doc.getId());
-		assertEquals("value1", doc.getJson().getValueAsText());
+		assertEquals("tempView using a serialized JSON didn't return the expected doc ID",
+                "1", doc.getId());
+		assertEquals("tempView using a serialized JSON didn't return the expected doc contents",
+                "value1", doc.getJson().getValueAsText());
 	}
 
 	@Test
@@ -250,10 +276,13 @@ public class DatabaseDocReadTest {
 		ObjectNode viewJson = new ObjectNode(JsonNodeFactory.instance);
 		viewJson.put("map", "function(doc) { if (doc.field1=='value1') { emit(null, doc.field1); } }");
 		ArrayList<Document> results = instance.tempView(viewJson);
-		assertEquals(1, results.size());
+		assertEquals("tempView using JSON didn't return the expected number of results",
+                1, results.size());
 		Document doc = results.get(0);
-		assertEquals("1", doc.getId());
-		assertEquals("value1", doc.getJson().getValueAsText());
+		assertEquals("tempView using JSON didn't return the expected doc ID",
+                "1", doc.getId());
+		assertEquals("tempView using JSON didn't return the expected doc contents",
+                "value1", doc.getJson().getValueAsText());
 	}
 
 	@Test

@@ -28,7 +28,8 @@ public class ServerTest {
 	public void testVersion() throws Exception {
 		String re = "^(\\d+\\.?)+$";
 		String version = instance.version();
-		assertTrue(version.matches(re));
+		assertTrue("version response format does not match expected format",
+                version.matches(re));
 	}
 
 	@Test
@@ -38,7 +39,8 @@ public class ServerTest {
 		db.create();
 		try {
 			ArrayList<String> result = instance.allDbs();
-			assertTrue(result.contains(dbName));
+			assertTrue("allDbs response does not contain a newly created DB",
+                    result.contains(dbName));
 		} finally {
 			db.delete();
 		}
@@ -50,8 +52,8 @@ public class ServerTest {
 		// the result is a big JSON with CouchDB's configuration params
 		// just check that one of them is indeed there
 		String logLevel = result.get("log").get("level").getTextValue();
-		assertNotNull(logLevel);
-		assertFalse(logLevel.isEmpty());
+		assertNotNull("config response does not contain the log level property", logLevel);
+		assertFalse("config response log level property is empty", logLevel.isEmpty());
 	}
 
 	@Test
@@ -60,37 +62,38 @@ public class ServerTest {
 		// the result is a big JSON with CouchDB's statistics
 		// just check that one of the expected parameters is there
 		int currentOpenDbs = result.get("couchdb").get("open_databases").get("current").getIntValue();
-		assertTrue(currentOpenDbs >= 0);
+		assertTrue("stats response does not contain an expected parameter", currentOpenDbs >= 0);
 	}
 
 	@Test
 	public void testNextUUIDs() throws Exception {
 		final int count = 10;
 		ArrayList<String> result = instance.nextUUIDs(count);
-		assertEquals(count, result.size());
+		assertEquals("nextUUIDs did not return the requested number of results",
+                count, result.size());
 		for (String uuid : result)
-			assertNotNull(uuid);
+			assertNotNull("A UUID returned by nextUUIDs was null", uuid);
 	}
 
 	@Test
 	public void testNextUUID() throws Exception {
 		String result = instance.nextUUID();
-		assertNotNull(result);
+		assertNotNull("The UUID returned by nextUUID was null", result);
 	}
 
 	@Test
 	public void testActiveTasks() throws Exception {
-		// Not much to test here really (unless we want to set up some length task to start running).
+		// Not much to test here really (unless we want to set up some lengthy task to start running).
 		// So I just call the method and ensure that it returns smoothly w/o any exceptions flying.
 		ArrayList<JsonNode> result = instance.activeTasks();
-		assertNotNull(result);
+		assertNotNull("activeTasks returned a null result", result);
 	}
 
 	@Test
 	public void testToString() {
 		String expResult = "CouchDB @http://127.0.0.1:5984/";
 		String result = instance.toString();
-		assertEquals(expResult, result);
+		assertEquals("toString did not return the expected result", expResult, result);
 	}
 
 }

@@ -33,7 +33,8 @@ public class DatabaseAPITest {
 		try {
 			JsonNode result = instance.info();
 			String resName = result.get("db_name").getTextValue();
-			assertEquals(dbName, resName);
+			assertEquals("Name of newly created DB does not match supplied name",
+                    dbName, resName);
 		} finally {
 			instance.delete();
 		}
@@ -45,7 +46,8 @@ public class DatabaseAPITest {
 		try {
 			Map<String, String> result = instance.infoAsMap();
 			String resName = result.get("db_name");
-			assertEquals(dbName, resName);
+			assertEquals("DB name from database info does not match the name given on creation",
+                    dbName, resName);
 		} finally {
 			instance.delete();
 		}
@@ -55,16 +57,17 @@ public class DatabaseAPITest {
 	public void testExists() throws Exception {
 		instance.create();
 		try {
-			assertTrue(instance.exists());
+			assertTrue("Newly created DB does not exist", instance.exists());
 		} finally {
 			instance.delete();
 		}
 
 		Database missing = new Database("no-such-database");
-		assertFalse(missing.exists());
+		assertFalse("A presumably non-existent database does exist", missing.exists());
 		// ensure that exceptions are still thrown when the response isn't 404
 		try {
-			Database wrong = new Database("ILLEGAL-DB-NAME"); // only lowercase letters are allowed by couchdb
+            // only lowercase letters are allowed by couchdb
+			Database wrong = new Database("ILLEGAL-DB-NAME");
 			wrong.exists();
 			fail("Expected an exception when calling exists() on a db with an illegal name");
 		} catch (CouchDBException ex) {
@@ -89,14 +92,16 @@ public class DatabaseAPITest {
 			result = newInstance.info();
 			fail("Assumed that database " + newName + " doesn't exist");
 		} catch (CouchDBException e) {
-			assertEquals(404, e.getStatusCode());
+			assertEquals("Status code 404 expected for non-existent DB info request",
+                    404, e.getStatusCode());
 		}
 		// now create the new database through the createIfNotExists method
 		try {
 			newInstance.createIfNotExists();
 			result = newInstance.info();
 			String resName = result.get("db_name").getTextValue();
-			assertEquals(newName, resName);
+			assertEquals("createIfNotExists may not have created a DB with the supplied name",
+                    newName, resName);
 		} finally {
 			newInstance.delete();
 		}
@@ -117,7 +122,8 @@ public class DatabaseAPITest {
 			result = instance.info();
 			fail("Database not deleted");
 		} catch (CouchDBException ex) {
-			assertEquals(404, ex.getStatusCode());
+			assertEquals("Status code 404 expected for just-deleted DB info request",
+                    404, ex.getStatusCode());
 		}
 	}
 
@@ -127,7 +133,8 @@ public class DatabaseAPITest {
 		try {
 			int result = instance.getRevsLimit();
 			int expected = 1000; // that's the default value for CouchDB
-			assertEquals(expected, result);
+			assertEquals("RevsLimit returned a value other than the default",
+                    expected, result);
 		} finally {
 			instance.delete();
 		}
@@ -139,11 +146,13 @@ public class DatabaseAPITest {
 		try {
 			instance.create();
 			int currentLimit = instance.getRevsLimit();
-			assertFalse(newLimit == currentLimit);
+			assertFalse("New limit used for setRevsLimit test is same as current",
+                    newLimit == currentLimit);
 
 			instance.setRevsLimit(newLimit);
 			currentLimit = instance.getRevsLimit();
-			assertTrue(newLimit == currentLimit);
+			assertTrue("New limit not set by setRevsLimit",
+                    newLimit == currentLimit);
 		} finally {
 			instance.delete();
 		}

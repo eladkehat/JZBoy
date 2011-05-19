@@ -27,7 +27,7 @@ public class JsonUtilsTest {
 			String str = JsonUtils.serializeJson(root);
 			String expected = "{\"_id\":\"12345\",\"_rev\":\"6-0cf82bfee87e7694d297f14373849401\",";
 			expected += "\"text\":\"Some text.\",\"list\":[1,2,3,4,5]}";
-			assertEquals(expected, str);
+			assertEquals("serializeJson didn't serialize a string as expected", expected, str);
 		} catch (IOException e) {
 			fail(e.toString());
 		}
@@ -40,7 +40,7 @@ public class JsonUtilsTest {
 		err.put("reason", "no_db_file");
 		String str = JsonUtils.serializeError(err);
 		String expected = "Error: not_found - no_db_file";
-		assertEquals(expected, str);
+		assertEquals("serializeJson didn't serialize an error as expected", expected, str);
 	}
 
 	@Test
@@ -49,9 +49,12 @@ public class JsonUtilsTest {
 		node.put("field1", "value1");
 		node.put("field2", 2);
 
-		assertEquals("value1", JsonUtils.getString(node, "field1", "default"));
-		assertEquals("default", JsonUtils.getString(node, "field2", "default"));
-		assertEquals("default", JsonUtils.getString(node, "field3", "default"));
+		assertEquals("getString did not return a field's correct value",
+                "value1", JsonUtils.getString(node, "field1", "default"));
+		assertEquals("getString did not return the default supplied for a non-string value",
+                "default", JsonUtils.getString(node, "field2", "default"));
+		assertEquals("getString did not return the default supplied for a non-existent field",
+                "default", JsonUtils.getString(node, "field3", "default"));
 	}
 
 	@Test
@@ -60,9 +63,12 @@ public class JsonUtilsTest {
 		node.put("field1", 1);
 		node.put("field2", "15");
 
-		assertEquals(1, JsonUtils.getInt(node, "field1", 15));
-		assertEquals(2, JsonUtils.getInt(node, "field2", 2));
-		assertEquals(3, JsonUtils.getInt(node, "field3", 3));
+		assertEquals("getInt did not return a field's correct value",
+                1, JsonUtils.getInt(node, "field1", 15));
+		assertEquals("getInt did not return the default supplied for a non-int value",
+                2, JsonUtils.getInt(node, "field2", 2));
+		assertEquals("getInt did not return the default supplied for a non-existent field",
+                3, JsonUtils.getInt(node, "field3", 3));
 	}
 
 }

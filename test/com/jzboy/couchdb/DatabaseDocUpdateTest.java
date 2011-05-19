@@ -58,11 +58,14 @@ public class DatabaseDocUpdateTest {
 		final String uuid = instance.getServer().nextUUID();
 		final String jsonStr = "{\"field1\":\"value1\",\"field2\":2}";
 		Document result = instance.createDocument(uuid, jsonStr, false);
-		assertEquals(uuid, result.getId());
-		assertTrue(result.hasRev());
-		assertTrue(result.getJson().get("ok").getBooleanValue());
+		assertEquals("New document's UUID doesn't match the value supplied to createDocument",
+                uuid, result.getId());
+		assertTrue("Newly created document has no rev value?", result.hasRev());
+		assertTrue("Result of createDocument wasn't {'ok':true}",
+                result.getJson().get("ok").getBooleanValue());
 		Document doc = instance.getDocument(uuid);
-		assertEquals(jsonStr, JsonUtils.serializeJson(doc.getJson()));
+		assertEquals("New document's content doesn't match the content supplied to createDocument",
+                jsonStr, JsonUtils.serializeJson(doc.getJson()));
 	}
 
 	@Test
@@ -72,9 +75,11 @@ public class DatabaseDocUpdateTest {
 		docJson.put("field1", "value1");
 		docJson.put("field2", 2);
 		Document result = instance.createDocument(uuid, docJson, false);
-		assertEquals(uuid, result.getId());
-		assertTrue(result.hasRev());
-		assertTrue(result.getJson().get("ok").getBooleanValue());
+		assertEquals("New document's UUID doesn't match the value supplied to createDocument",
+                uuid, result.getId());
+		assertTrue("Newly created document has no rev value?", result.hasRev());
+		assertTrue("Result of createDocument wasn't {'ok':true}",
+                result.getJson().get("ok").getBooleanValue());
 	}
 
 	@Test
@@ -82,14 +87,16 @@ public class DatabaseDocUpdateTest {
 		final String uuid = instance.getServer().nextUUID();
 		final String jsonStr = "{\"field1\":\"value1\",\"field2\":2}";
 		Document result = instance.createDocument(uuid, jsonStr, true);
-		assertEquals(uuid, result.getId());
-		assertTrue(result.getJson().get("ok").getBooleanValue());
-		// no revision returned in batch mode
-		assertFalse(result.hasRev());
+		assertEquals("New document's UUID doesn't match the value supplied to batch create",
+                uuid, result.getId());
+		assertTrue("Result of batch createDocument wasn't {'ok':true}",
+                result.getJson().get("ok").getBooleanValue());
+		assertFalse("Document created in batch mode returned a revision", result.hasRev());
 		// wait for 2 seconds, then try to load this document
 		Thread.sleep(2000);
 		Document doc = instance.getDocument(uuid);
-		assertEquals(jsonStr, JsonUtils.serializeJson(doc.getJson()));
+		assertEquals("New document's content doesn't match the content supplied to batch create",
+                jsonStr, JsonUtils.serializeJson(doc.getJson()));
 	}
 
 	@Test
@@ -100,9 +107,11 @@ public class DatabaseDocUpdateTest {
 		docJson.put("field2", 22);
 		Document newDoc = new Document(uuid, docJson);
 		Document result = instance.createDocument(newDoc, false);
-		assertEquals(uuid, result.getId());
-		assertTrue(result.hasRev());
-		assertTrue(result.getJson().get("ok").getBooleanValue());
+		assertEquals("New document's UUID doesn't match the value supplied to createDocument",
+                uuid, result.getId());
+		assertTrue("Newly created document has no rev value?", result.hasRev());
+		assertTrue("Result of createDocument wasn't {'ok':true}",
+                result.getJson().get("ok").getBooleanValue());
 
 		Document doc = instance.getDocument(uuid);
 		assertEquals(docJson, doc.getJson());
@@ -114,20 +123,24 @@ public class DatabaseDocUpdateTest {
 		final String jsonStr = "{\"field1\":\"value135\",\"field2\":246}";
 		// create a new document
 		Document result = instance.createDocument(uuid, jsonStr, false);
-		assertTrue(result.getJson().get("ok").getBooleanValue());
+		assertTrue("Result of createDocument update wasn't {'ok':true}",
+                result.getJson().get("ok").getBooleanValue());
 		// check the value of 'field1'
 		Document doc = instance.getDocument(uuid);
-		assertEquals("value135", JsonUtils.getString(doc.getJson(), "field1", null));
+		assertEquals("Newly created Document doesn't contain a supplied value",
+                "value135", JsonUtils.getString(doc.getJson(), "field1", null));
 		final String rev1 = doc.getRev();
 		// update 'field1' to a different value
 		ObjectNode node = (ObjectNode) doc.getJson();
 		node.put("field1", "value99");
 		Document upDoc = instance.updateDocument(doc);
 		// ensure that we got a higher revision number
-		assertTrue(upDoc.getRev().compareTo(rev1) > 0);
+		assertTrue("Update didn't increment document revision",
+                upDoc.getRev().compareTo(rev1) > 0);
 		// check the value of 'field1'
 		Document docAgain = instance.getDocument(uuid);
-		assertEquals("value99", JsonUtils.getString(docAgain.getJson(), "field1", null));
+		assertEquals("Update didn't modify the document",
+                "value99", JsonUtils.getString(docAgain.getJson(), "field1", null));
 	}
 
 	@Test
@@ -136,20 +149,24 @@ public class DatabaseDocUpdateTest {
 		final String jsonStr = "{\"field1\":\"value135\",\"field2\":246}";
 		// create a new document
 		Document result = instance.createDocument(uuid, jsonStr, false);
-		assertTrue(result.getJson().get("ok").getBooleanValue());
+		assertTrue("Result of createDocument update wasn't {'ok':true}",
+                result.getJson().get("ok").getBooleanValue());
 		// ensure that document exists
 		Document doc = instance.getDocument(uuid);
-		assertEquals(jsonStr, JsonUtils.serializeJson(doc.getJson()));
+		assertEquals("New document's content doesn't match the content in create",
+                jsonStr, JsonUtils.serializeJson(doc.getJson()));
 		// now delete it
 		String rev = instance.deleteDocument(doc);
 		// the delete stub revision should be higher than the original doc revision
-		assertTrue(doc.getRev().compareTo(rev) < 0);
+		assertTrue("Deleted Document stub revision wasn't incremented",
+                doc.getRev().compareTo(rev) < 0);
 		// ensure that it doesn't exist anymore
 		try {
 			instance.getDocument(uuid);
 			fail("Document was supposed to have been deleted");
 		} catch (CouchDBException ex) {
-			assertEquals(404, ex.getStatusCode());
+			assertEquals("Attempt to retrieve a deleted document didn't return the expected status code",
+                    404, ex.getStatusCode());
 		}
 	}
 
@@ -170,20 +187,25 @@ public class DatabaseDocUpdateTest {
 
 		Document doc = new Document(uuid, null, jsonStr);
 		Document resDoc = instance.saveAttachment(doc, fileName, attachment, contentType);
-		assertTrue(resDoc.getJson().get("ok").getBooleanValue());
-		assertEquals(uuid, resDoc.getId());
+		assertTrue("Result of saveAttachment update wasn't {'ok':true}",
+                resDoc.getJson().get("ok").getBooleanValue());
+		assertEquals("UUID of Document saved with attachment wasn't the supplied UUID",
+                uuid, resDoc.getId());
 
 		// now get the stored attachment in its raw form
 		HttpResponse httpRes = instance.getAttachmentRaw(uuid, fileName);
-		assertEquals(200, httpRes.getStatusLine().getStatusCode());
+		assertEquals("Request for raw Document attachment didn't return status 200",
+                200, httpRes.getStatusLine().getStatusCode());
 		HttpEntity ent = httpRes.getEntity();
-		assertEquals(contentType, ent.getContentType().getValue());
+		assertEquals("Attachment content type doesn't match the type supplied on creation",
+                contentType, ent.getContentType().getValue());
 		byte[] resAttachment = readInputStream(ent.getContent());
-		assertArrayEquals(attachment, resAttachment);
-
+		assertArrayEquals("Contents of attachement retrieved in raw form doesn't match the content supplied on creation",
+                attachment, resAttachment);
 		// get the stored attachment as an input stream
 		resAttachment = instance.getAttachment(uuid, fileName);
-		assertArrayEquals(attachment, resAttachment);
+		assertArrayEquals("Contents of attachment retrieved as inputStream doesn't match the content supplied on creation",
+                attachment, resAttachment);
 	}
 
 
@@ -196,21 +218,27 @@ public class DatabaseDocUpdateTest {
 		final String contentType = "application/x-gzip";
 		Document doc = new Document(uuid, null, jsonStr);
 		Document resDoc = instance.saveAttachment(doc, fileName, attachment, contentType);
-		assertTrue(resDoc.getJson().get("ok").getBooleanValue());
-		assertEquals(uuid, resDoc.getId());
+		assertTrue("Result of saveAttachment update wasn't {'ok':true}",
+                resDoc.getJson().get("ok").getBooleanValue());
+		assertEquals("UUID of Document saved with attachment wasn't the supplied UUID",
+                uuid, resDoc.getId());
 		// ensure it's retrievable
 		byte[] resAttachment = instance.getAttachment(uuid, fileName);
-		assertTrue(resAttachment.length > 0);
+		assertTrue("Attachment contents wasn't returned by getAttachment",
+                resAttachment.length > 0);
 		// delete it
 		Document del = instance.deleteAttachment(resDoc, fileName); // use the doc that has a correct revision id
-		assertEquals(uuid, del.getId());
-		assertTrue(del.getRev().compareTo(resDoc.getRev()) > 0);
+		assertEquals("UUID returned by deleteAttachment doesn't match the original UUID",
+                uuid, del.getId());
+		assertTrue("Rev returned by deleteAttachment wasn't incremented",
+                del.getRev().compareTo(resDoc.getRev()) > 0);
 		// ensure that it's gone
 		try {
 			resAttachment = instance.getAttachment(uuid, fileName);
 			fail("Attachment wasn't deleted");
 		} catch (CouchDBException e) {
-			assertEquals(404, e.getStatusCode());
+			assertEquals("Attempt to retrieve a deleted attachment didn't return the expected status code",
+                    404, e.getStatusCode());
 		}
 	}
 
@@ -224,10 +252,12 @@ public class DatabaseDocUpdateTest {
 		instance.saveInBulk(doc1);
 		instance.saveInBulk(doc2);
 		int pending = instance.numDocsPendingBulkUpdate();
-		assertEquals(2, pending);
+		assertEquals("Wrong number of pending docs following saveInBulk calls",
+                2, pending);
 		instance.clearBulkUpdatesCache();
 		pending = instance.numDocsPendingBulkUpdate();
-		assertEquals(0, pending);
+		assertEquals("Number of pending docs following clearBulkUpdatesCache not zero",
+                0, pending);
 	}
 
 	@Test
@@ -238,16 +268,21 @@ public class DatabaseDocUpdateTest {
 		final String json2 = "{\"field1\":\"value2\",\"field2\":3}";
 		Document doc1 = new Document(uuids.get(0), null, json1);
 		Document doc2 = new Document(uuids.get(1), null, json2);
-		assertEquals(0, instance.numDocsPendingBulkUpdate());
+		assertEquals("Unexpected documents pending bulk save - cache should be clear",
+                0, instance.numDocsPendingBulkUpdate());
 		instance.saveInBulk(doc1);
-		assertEquals(1, instance.numDocsPendingBulkUpdate());
+		assertEquals("Wrong number of pending docs following saveInBulk call",
+                1, instance.numDocsPendingBulkUpdate());
 		instance.saveInBulk(doc2);
-		assertEquals(0, instance.numDocsPendingBulkUpdate());
+		assertEquals("Bulk cache not cleared following number of saves that matched the limit",
+                0, instance.numDocsPendingBulkUpdate());
 
 		Document resDoc1 = instance.getDocument(uuids.get(0));
-		assertEquals(json1, JsonUtils.serializeJson(resDoc1.getJson()));
+		assertEquals("Contents of document saved in bulk and then retrieved don't match the original",
+                json1, JsonUtils.serializeJson(resDoc1.getJson()));
 		Document resDoc2 = instance.getDocument(uuids.get(1));
-		assertEquals(json2, JsonUtils.serializeJson(resDoc2.getJson()));
+		assertEquals("Contents of document saved in bulk and then retrieved don't match the original",
+                json2, JsonUtils.serializeJson(resDoc2.getJson()));
 	}
 
 	@Test
@@ -272,18 +307,21 @@ public class DatabaseDocUpdateTest {
 		instance.deleteInBulk(saved1);
 		instance.deleteInBulk(saved2);
 
-		assertEquals(0, instance.numDocsPendingBulkUpdate());
+		assertEquals("Number of documents in bulk cache not as expected",
+                0, instance.numDocsPendingBulkUpdate());
 		try {
 			instance.getDocument(uuids.get(0));
 			fail("Document wasn't deleted");
 		} catch (CouchDBException ex1) {
-			assertEquals(404, ex1.getStatusCode());
+			assertEquals("Attempt to retrieve a deleted attachment didn't return the expected status code",
+                    404, ex1.getStatusCode());
 		}
 		try {
 			instance.getDocument(uuids.get(1));
 			fail("Document wasn't deleted");
 		} catch (CouchDBException ex2) {
-			assertEquals(404, ex2.getStatusCode());
+			assertEquals("Attempt to retrieve a deleted attachment didn't return the expected status code",
+                    404, ex2.getStatusCode());
 		}
 	}
 
@@ -295,15 +333,19 @@ public class DatabaseDocUpdateTest {
 		final String json2 = "{\"field1\":\"value2\",\"field2\":3}";
 		Document doc1 = new Document(uuids.get(0), null, json1);
 		Document doc2 = new Document(uuids.get(1), null, json2);
-		assertEquals(0, instance.numDocsPendingBulkUpdate());
+		assertEquals("Number of documents in bulk cache not as expected",
+                0, instance.numDocsPendingBulkUpdate());
 		instance.saveInBulk(doc1);
 		instance.saveInBulk(doc2);
-		assertEquals(2, instance.numDocsPendingBulkUpdate());
+		assertEquals("Number of documents in bulk cache not as expected",
+                2, instance.numDocsPendingBulkUpdate());
 
 		ArrayList<JsonNode> report = instance.flushBulkUpdatesCache(false, true);
-		assertEquals(0, instance.numDocsPendingBulkUpdate());
+		assertEquals("Documents not flushed from bulk cache following call to flush",
+                0, instance.numDocsPendingBulkUpdate());
 		for (JsonNode resDoc : report) {
-			assertTrue(uuids.contains(resDoc.get("id").getTextValue()));
+			assertTrue("Results of flushBulkUpdatesCache did not contain a saved document's ID",
+                    uuids.contains(resDoc.get("id").getTextValue()));
 		}
 	}
 
