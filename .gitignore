@@ -2,6 +2,7 @@
 lib/*
 # Compiled classes and other build-generated files
 build/*
+out/*
 # Temporary dir
 tmp/*
 
