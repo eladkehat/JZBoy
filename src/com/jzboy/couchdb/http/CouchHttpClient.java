@@ -91,16 +91,17 @@ public class CouchHttpClient {
 	/**
 	 * Sends a POST request to the specified CouchDB endpoint.
 	 * @param uri	CouchDB API endpoint
-	 * @param data	request data
+	 * @param json	request data
 	 * @return the JSON tree parsed form the response body
 	 * @throws IOException		if the HttpClient throws an IOException
 	 * @throws CouchDBException	if CouchDB returns an error - response code >= 300. The response details are
 	 * encapsulated in the exception.
 	 */
-	public JsonNode post(URI uri, String data) throws IOException, CouchDBException {
+	public JsonNode post(URI uri, String json) throws IOException, CouchDBException {
 		HttpPost req = new HttpPost(uri);
-		if (data != null)
-			req.setEntity(new StringEntity(data));
+        req.addHeader("Content-Type", "application/json");
+		if (json != null)
+			req.setEntity(new StringEntity(json));
 		return execRequest(req);
 	}
 
