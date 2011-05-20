@@ -94,8 +94,8 @@ for (Document doc : docs) {
 Building from Source
 --------------------
 
-JZBoy uses ant and {Ivy}[http://ant.apache.org/ivy/] for dependency resolution.
-If you're unfamiliar with Ivy, follow instructions {here}[http://ant.apache.org/ivy/history/latest-milestone/install.html]
+JZBoy uses ant and [Ivy][4] for dependency resolution.
+If you're unfamiliar with Ivy, follow instructions [here][5]
 or just download and drop ivy.jar into your ant lib directory. It will download dependencies from the standard
 Maven2 repository when you run ant.
 
@@ -104,3 +104,5 @@ Maven2 repository when you run ant.
 [1]: http://wiki.fasterxml.com/JacksonHome
 [2]: http://hc.apache.org/
 [3]: http://www.slf4j.org/
+[4]: http://ant.apache.org/ivy/
+[5]: http://ant.apache.org/ivy/history/latest-milestone/install.html
