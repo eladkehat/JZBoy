@@ -1,10 +1,10 @@
 JZBoy
 =====
 
-JZBoy is the most simple way to work with {CouchDB}[http://couchdb.apache.org/] from Java.
+JZBoy is the most simple way to work with [CouchDB][0] from Java.
 
 Rather than provide a full-fledged persistence layer, it lets you work with
-CouchDB directly via JSON (using {Jackson}[http://wiki.fasterxml.com/JacksonHome]).
+CouchDB directly via JSON (using [Jackson][1]).
 This makes it fast and simple to use, adding as few lines as possible to your code base.
 
 
@@ -22,9 +22,10 @@ Dependencies
 ------------
 
 JZBoy is built on a minimal set of external libraries:
- * {Apache HttpComponents}[http://hc.apache.org/]
- * {Jackson}[http://wiki.fasterxml.com/JacksonHome]
- * {SLF4J}[http://www.slf4j.org/]
+
+* [Apache HttpComponents][2]
+* [Jackson][1]
+* [SLF4J][3]
 
 
 Example
@@ -97,3 +98,9 @@ JZBoy uses ant and {Ivy}[http://ant.apache.org/ivy/] for dependency resolution.
 If you're unfamiliar with Ivy, follow instructions {here}[http://ant.apache.org/ivy/history/latest-milestone/install.html]
 or just download and drop ivy.jar into your ant lib directory. It will download dependencies from the standard
 Maven2 repository when you run ant.
+
+
+[0]: http://couchdb.apache.org/
+[1]: http://wiki.fasterxml.com/JacksonHome
+[2]: http://hc.apache.org/
+[3]: http://www.slf4j.org/
