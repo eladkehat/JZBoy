@@ -26,15 +26,15 @@ public class ServerTest {
 
 	@Test
 	public void testVersion() throws Exception {
-		String re = "^(\\d+\\.?)+$";
+		String re = "^\\d+\\.\\d+\\.\\w+$";
 		String version = instance.version();
-		assertTrue("version response format does not match expected format",
+		assertTrue("version response format does not match expected format: " + version,
                 version.matches(re));
 	}
 
 	@Test
 	public void testAllDbs() throws Exception {
-		final String dbName = "server-test-db" + System.currentTimeMillis();
+		final String dbName = "jzboy_server_test_db_" + System.currentTimeMillis();
 		Database db = new Database(instance, dbName);
 		db.create();
 		try {

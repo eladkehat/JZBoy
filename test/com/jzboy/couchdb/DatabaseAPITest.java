@@ -23,7 +23,7 @@ public class DatabaseAPITest {
 
     @Before
     public void setUp() {
-		dbName = "server-test-db" + System.currentTimeMillis();
+		dbName = "jzboy_test_db_" + System.currentTimeMillis();
 		instance = new Database(dbName);
     }
 
@@ -62,12 +62,12 @@ public class DatabaseAPITest {
 			instance.delete();
 		}
 
-		Database missing = new Database("no-such-database");
+		Database missing = new Database("no_such_database");
 		assertFalse("A presumably non-existent database does exist", missing.exists());
 		// ensure that exceptions are still thrown when the response isn't 404
 		try {
             // only lowercase letters are allowed by couchdb
-			Database wrong = new Database("ILLEGAL-DB-NAME");
+			Database wrong = new Database("ILLEGAL_DB_NAME");
 			wrong.exists();
 			fail("Expected an exception when calling exists() on a db with an illegal name");
 		} catch (CouchDBException ex) {

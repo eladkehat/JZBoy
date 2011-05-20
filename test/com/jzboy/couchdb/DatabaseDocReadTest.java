@@ -42,7 +42,7 @@ public class DatabaseDocReadTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-		dbName = "server-test-db" + System.currentTimeMillis();
+		dbName = "server_test_db_" + System.currentTimeMillis();
 		instance = new Database(dbName);
 		instance.create();
 		// create some documents

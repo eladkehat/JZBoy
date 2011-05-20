@@ -34,7 +34,7 @@ public class DatabaseDocUpdateTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-		dbName = "server-test-db" + System.currentTimeMillis();
+		dbName = "jzboy_test_db_" + System.currentTimeMillis();
 		instance = new Database(dbName);
 		instance.create();
 
