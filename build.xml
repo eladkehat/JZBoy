@@ -5,7 +5,7 @@
   ~ http://www.opensource.org/licenses/mit-license.php
   -->
 
-<project name="JZBoy" default="build.jar" basedir=".">
+<project name="JZBoy" default="build.jar" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
 
     <property name="src.dir" location="src" />
     <property name="test.dir" location="test" />
@@ -13,17 +13,21 @@
     <property name="doc.dir" location="doc" />
     <property name="build.dir" location="build" />
     <property name="product.name" value="jzboy" />
-    <property name="version.number" value="0.2.1" />
+    <property name="version.number" value="0.3.0" />
     <property name="jar.name" value="${product.name}-${version.number}.jar" />
     <property name="dist.package.name" value="${product.name}-${version.number}" />
+
+    <target name="resolve" description="retrieve dependencies with ivy">
+        <ivy:retrieve />
+    </target>
 
     <target name="clean">
         <delete dir="${build.dir}" quiet="true"/>
     </target>
 
     <path id="classpath.build">
-        <pathelement location="${lib.dir}/httpclient-4.0.1.jar"/>
-        <pathelement location="${lib.dir}/httpcore-4.0.1.jar"/>
+        <pathelement location="${lib.dir}/httpclient-4.1.1.jar"/>
+        <pathelement location="${lib.dir}/httpcore-4.1.1.jar"/>
         <pathelement location="${lib.dir}/jackson-core-asl-1.5.1.jar"/>
         <pathelement location="${lib.dir}/jackson-mapper-asl-1.5.1.jar"/>
         <pathelement location="${lib.dir}/logback-classic-0.9.21.jar"/>
@@ -31,7 +35,7 @@
         <pathelement location="${lib.dir}/slf4j-api-1.6.0.jar"/>
     </path>
 
-    <target name="build.classes">
+    <target name="build.classes" depends="resolve">
         <mkdir dir="${build.dir}"/>
         <mkdir dir="${build.dir}/classes"/>
         <javac srcdir="${src.dir}"
@@ -39,7 +43,8 @@
                includes="**/*.java"
                deprecation="off"
                debug="on"
-               source="1.6">
+               source="1.6"
+               includeantruntime="false">
             <classpath refid="classpath.build" />
         </javac>
     </target>
@@ -61,8 +66,8 @@
     <path id="classpath.test">
         <pathelement location="${build.dir}/${jar.name}"/>
         <pathelement location="${lib.dir}/junit-4.8.2.jar"/>
-        <pathelement location="${lib.dir}/httpclient-4.0.1.jar"/>
-        <pathelement location="${lib.dir}/httpcore-4.0.1.jar"/>
+        <pathelement location="${lib.dir}/httpclient-4.1.1.jar"/>
+        <pathelement location="${lib.dir}/httpcore-4.1.1.jar"/>
         <pathelement location="${lib.dir}/jackson-core-asl-1.5.1.jar"/>
         <pathelement location="${lib.dir}/jackson-mapper-asl-1.5.1.jar"/>
         <pathelement location="${lib.dir}/logback-classic-0.9.21.jar"/>
@@ -163,14 +168,14 @@
             <fileset dir="." includes="LICENSE"/>
             <fileset dir="${build.dir}" includes="${jar.name}"/>
             <tarfileset dir="${lib.dir}" prefix="lib"
-                        includes="httpclient-4.0.1.jar httpcore-4.0.1.jar jackson-core-asl-1.5.1.jar jackson-mapper-asl-1.5.1.jar slf4j-api-1.6.0.jar"
+                        includes="httpclient-4.1.1.jar httpcore-4.1.1.jar jackson-core-asl-1.5.1.jar jackson-mapper-asl-1.5.1.jar slf4j-api-1.6.0.jar"
                         />
         </tar>
         <zip destfile="${build.dir}/${dist.package.name}-bin-with-deps.zip">
             <fileset dir="." includes="LICENSE"/>
             <fileset dir="${build.dir}" includes="${jar.name}"/>
             <zipfileset dir="${lib.dir}" prefix="lib"
-                        includes="httpclient-4.0.1.jar httpcore-4.0.1.jar jackson-core-asl-1.5.1.jar jackson-mapper-asl-1.5.1.jar slf4j-api-1.6.0.jar"
+                        includes="httpclient-4.1.1.jar httpcore-4.1.1.jar jackson-core-asl-1.5.1.jar jackson-mapper-asl-1.5.1.jar slf4j-api-1.6.0.jar"
                         />
         </zip>
     </target>
