@@ -7,11 +7,16 @@
 package com.jzboy.couchdb.http;
 
 import com.jzboy.couchdb.CouchDBException;
+import com.jzboy.couchdb.http.CouchResponse;
+import com.jzboy.couchdb.http.CouchResponseHandler;
 import com.jzboy.couchdb.util.JsonUtils;
+import com.jzboy.couchdb.http.PreemptiveAuthRequestInterceptor;
 import java.io.IOException;
 import java.net.URI;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -31,7 +36,29 @@ public class CouchHttpClient {
 
 	private static final Logger logger = LoggerFactory.getLogger(CouchHttpClient.class);
 	
-	final HttpClient httpclient = new DefaultHttpClient();
+	HttpClient httpclient;
+	
+	/**
+	 * Set httpclient to connect with couch db thet support authentification
+	 * @param host - CouchDB host
+	 * @param port - port for communication
+	 * @param user - username
+	 * @param password - user passowrd
+	 */
+	public CouchHttpClient(String host, int port, String user, String password)
+	{
+		DefaultHttpClient client = new DefaultHttpClient();
+		client.getCredentialsProvider().setCredentials(
+				new AuthScope(host, port, AuthScope.ANY_REALM),
+				new UsernamePasswordCredentials(user, password));
+		client.addRequestInterceptor(
+				new PreemptiveAuthRequestInterceptor(), 0);
+		this.httpclient = client;
+	}
+	
+	public CouchHttpClient() {
+		this.httpclient = new DefaultHttpClient();
+	}
 
 	/**
 	 * Sends a GET request to the specified CouchDB endpoint and returns CouchDB's response as a JSON object.

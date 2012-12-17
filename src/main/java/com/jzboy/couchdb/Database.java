@@ -6,6 +6,7 @@
 
 package com.jzboy.couchdb;
 
+import com.jzboy.couchdb.Server;
 import com.jzboy.couchdb.http.CouchResponse;
 import com.jzboy.couchdb.util.JsonUtils;
 import com.jzboy.couchdb.http.URITemplates;
@@ -74,7 +75,20 @@ public class Database {
 		this.server = new Server();
 		this.dbName = dbName;
 	}
-
+	
+	/**
+	 * Create a Database object, and its encapsulated Server that support authentication
+	 * @param host		the server's host
+	 * @param port		the server's port
+	 * @param username	user name on the server
+	 * @param password	user's password
+	 * @param dbName	unique name of this database on the server
+	 */
+	public Database(String host, int port, String username, String password, String dbName) {
+		this.server = new Server(host, port, username, password);
+		this.dbName = dbName;
+	}
+	
 	public String getDbName() {
 		return dbName;
 	}
