@@ -19,7 +19,7 @@ import org.codehaus.jackson.JsonNode;
  */
 public class Server {
 
-	final CouchHttpClient httpclient = new CouchHttpClient();
+	CouchHttpClient httpclient;
 	final String host;
 	final int port;
 
@@ -27,10 +27,22 @@ public class Server {
 	 * Create a Server with the given host name and port number
 	 */
 	public Server(String host, int port) {
+		httpclient = new CouchHttpClient();
 		this.host = host;
 		this.port = port;
 	}
+	
 
+	/**
+	 * Create a Server with the given host name and port number, user, and password
+	 */
+	public Server(String host, int port, String username, String password)
+	{
+		this.host = host;
+		this.port= port;
+		httpclient = new CouchHttpClient(host, port, username, password);
+	}
+	
 	/**
 	 * Create a Server running at the default location - localhost on port 5984
 	 */
